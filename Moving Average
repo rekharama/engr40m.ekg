@@ -1,0 +1,66 @@
+moving average.ipynb
+
+Code cell <xH3VxPjrQHj6>
+#%% [code]
+import csv
+import matplotlib.pyplot as plt
+#set number of points to average 
+n = 25
+#data arrays and vars
+time = []
+freq = []
+fpos = 0
+toffset = 0
+#this is the new array with moving average frequency 
+newfreq = []
+#load in csv file 
+#uses CSV file with ALL headers removed
+with open("rekha heart.csv", "r") as file:
+  hfile = csv.reader(file)
+  for row in hfile: 
+    time.append(float(row[0]))
+    freq.append(float(row[1]))
+
+for x in range(len(freq)): 
+  if x < n+1: 
+    x + 1
+    toffset = toffset + 1
+  else: 
+    #sequence of samples is a1 --> az
+    #z is total number of samples 
+    #n is the last # samples we want to take the average over 
+    #filtered sequence is yn --> yz 
+    #yz = 1/z ( asub(z-n+1)...+asubz)
+    fac = 1/n
+    #initial term
+    toinc = x - n
+    sum = 0 
+    while toinc < x:
+      t = freq[toinc]
+      sum = sum + t
+      toinc = toinc + 1
+    #new term to add to array 
+    yz = fac * sum 
+    #add to array
+    newfreq.append(yz)
+#filtered output
+fig1 = plt.figure()
+plt.plot(time[toffset:], newfreq)
+plt.xlabel("Time (s)");
+plt.ylabel("Voltage (V)");
+plt.title("Filtered Heartbeat");
+#raw output
+fig2 = plt.figure()
+plt.plot(time, freq)
+plt.xlabel("Time (s)");
+plt.ylabel("Voltage (V)");
+plt.title("Raw Heartbeat");
+
+Execution output from Dec 5, 2021 1:42 PM
+67KB
+	text/plain
+		<Figure size 432x288 with 1 Axes>
+		<Figure size 432x288 with 1 Axes>
+
+Code cell <J98Xz_LfRfqd>
+#%% [code]
